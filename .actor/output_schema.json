@@ -1,0 +1,11 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Output schema of Vehicle Complaint Tracker",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Complaints",
+            "template": "{{links.apiDefaultDatasetUrl}}/items"
+        }
+    }
+}
