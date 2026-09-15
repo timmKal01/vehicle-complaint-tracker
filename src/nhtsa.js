@@ -1,5 +1,13 @@
 const BASE_URL = 'https://api.nhtsa.gov/complaints/complaintsByVehicle';
 
+const TRANSIENT_STATUSES = new Set([429, 500, 502, 503, 504]);
+const MAX_ATTEMPTS = 4;
+const REQUEST_TIMEOUT_MS = 15_000;
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /** NHTSA returns dates as MM/DD/YYYY. */
 function toIsoDate(mdy) {
     const [month, day, year] = mdy.split('/');
@@ -13,12 +21,32 @@ async function fetchComplaintsForYear(make, model, year) {
     url.searchParams.set('model', model);
     url.searchParams.set('modelYear', String(year));
 
-    const res = await fetch(url, { headers: { Connection: 'close' } });
-    if (!res.ok) {
-        throw new Error(`NHTSA API request failed for model year ${year}: ${res.status} ${res.statusText}`);
+    let lastError;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+        let res;
+        let body;
+        try {
+            res = await fetch(url, { headers: { Connection: 'close' }, signal: controller.signal });
+            body = await res.json().catch(() => null);
+        } catch (err) {
+            lastError = err.name === 'AbortError' ? new Error(`NHTSA request timed out for model year ${year}`) : err;
+            if (attempt < MAX_ATTEMPTS) await sleep(1000 * 2 ** (attempt - 1));
+            continue;
+        } finally {
+            clearTimeout(timeoutId);
+        }
+        // NHTSA returns HTTP 400 even for a genuine zero-results response (e.g. a model
+        // year with no complaints filed yet) — trust the parsed body over the status code.
+        if (body && Array.isArray(body.results)) return body.results;
+        if (!TRANSIENT_STATUSES.has(res.status)) {
+            throw new Error(`NHTSA API request failed for model year ${year}: ${res.status} ${res.statusText}`);
+        }
+        lastError = new Error(`NHTSA API request failed for model year ${year}: ${res.status} ${res.statusText}`);
+        if (attempt < MAX_ATTEMPTS) await sleep(1000 * 2 ** (attempt - 1));
     }
-    const body = await res.json();
-    return body.results ?? [];
+    throw lastError;
 }
 
 export async function fetchComplaints({ make, model, yearFrom, yearTo, seriousOnly, maxResults }) {
