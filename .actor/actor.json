@@ -1,7 +1,7 @@
 {
     "actorSpecification": 1,
     "name": "vehicle-complaint-tracker",
-    "title": "Vehicle Complaint Tracker — NHTSA Owner Complaints",
+    "title": "Vehicle Complaint Lookup: NHTSA Owner Reports",
     "description": "Search raw owner-submitted vehicle complaints filed with NHTSA by make, model, and model-year range — the early-warning signal that often precedes an official recall. Optionally filter to crash/fire/injury complaints only.",
     "version": "0.1",
     "meta": {
