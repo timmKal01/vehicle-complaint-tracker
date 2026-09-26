@@ -1,0 +1,81 @@
+{
+    "actorSpecification": 1,
+    "fields": {},
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "transformation": {
+                "fields": [
+                    "odiNumber",
+                    "vehicle.year",
+                    "vehicle.make",
+                    "vehicle.model",
+                    "components",
+                    "summary",
+                    "crash",
+                    "fire",
+                    "numberOfInjuries",
+                    "numberOfDeaths",
+                    "dateOfIncident",
+                    "dateComplaintFiled"
+                ],
+                "flatten": [
+                    "vehicle"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "odiNumber": {
+                        "label": "ODI number",
+                        "format": "number"
+                    },
+                    "vehicle.year": {
+                        "label": "Vehicle: year",
+                        "format": "text"
+                    },
+                    "vehicle.make": {
+                        "label": "Vehicle: make",
+                        "format": "text"
+                    },
+                    "vehicle.model": {
+                        "label": "Vehicle: model",
+                        "format": "text"
+                    },
+                    "components": {
+                        "label": "Components",
+                        "format": "text"
+                    },
+                    "summary": {
+                        "label": "Summary",
+                        "format": "text"
+                    },
+                    "crash": {
+                        "label": "Crash",
+                        "format": "boolean"
+                    },
+                    "fire": {
+                        "label": "Fire",
+                        "format": "boolean"
+                    },
+                    "numberOfInjuries": {
+                        "label": "Number of injuries",
+                        "format": "number"
+                    },
+                    "numberOfDeaths": {
+                        "label": "Number of deaths",
+                        "format": "number"
+                    },
+                    "dateOfIncident": {
+                        "label": "Date of incident",
+                        "format": "text"
+                    },
+                    "dateComplaintFiled": {
+                        "label": "Date complaint filed",
+                        "format": "text"
+                    }
+                }
+            }
+        }
+    }
+}
