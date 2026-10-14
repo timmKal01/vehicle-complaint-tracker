@@ -76,4 +76,4 @@ complaints or 200.
 
 ## Related products
 
-- [Vehicle Recall Tracker](https://github.com/timmKal01/vehicle-recall-tracker) — official confirmed recalls from the same NHTSA data family, the "after" to this actor's "before"
+- [Vehicle Recall Lookup by Make, Model & Year](https://apify.com/m_ctim/vehicle-recall-tracker): official confirmed recalls from the same NHTSA data family, the "after" to this actor's "before"
