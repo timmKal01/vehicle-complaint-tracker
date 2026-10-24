@@ -54,5 +54,5 @@
             "maximum": 200
         }
     },
-    "required": ["make", "model"]
+    "required": []
 }
