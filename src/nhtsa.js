@@ -1,3 +1,7 @@
+// Some public APIs refuse requests that identify themselves only as Node's default "node" user agent (data.cms.gov
+// started doing so in October 2026), so every request says which tool is asking and where to find it.
+const USER_AGENT = 'vehicle-complaint-tracker/0.1 (+https://apify.com/m_ctim/vehicle-complaint-tracker)';
+
 const BASE_URL = 'https://api.nhtsa.gov/complaints/complaintsByVehicle';
 
 const TRANSIENT_STATUSES = new Set([429, 500, 502, 503, 504]);
@@ -28,7 +32,7 @@ async function fetchComplaintsForYear(make, model, year) {
         let res;
         let body;
         try {
-            res = await fetch(url, { headers: { Connection: 'close' }, signal: controller.signal });
+            res = await fetch(url, { headers: { 'User-Agent': USER_AGENT, Connection: 'close' }, signal: controller.signal });
             body = await res.json().catch(() => null);
         } catch (err) {
             lastError = err.name === 'AbortError' ? new Error(`NHTSA request timed out for model year ${year}`) : err;
